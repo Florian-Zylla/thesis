@@ -1,0 +1,12 @@
+!ArenaConfig
+arenas:
+  0: !Arena
+    t: 0
+    items:
+    - !Item
+      name: Agent
+      positions:
+        - !Vector3 {x: 0,y: 0,z: 0 }
+      rotations: [45]
+
+
