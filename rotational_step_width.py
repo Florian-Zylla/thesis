@@ -24,6 +24,9 @@ def rect_detect(array,c_min,c_max,start,end):
 
 
 
+
+
+
 # initial settings of the environment
 env = UnityEnvironment(
     n_arenas=1,
