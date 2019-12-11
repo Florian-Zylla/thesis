@@ -12,8 +12,7 @@ import compass.compass as c
 import display.display as d
 import groundTruth.groundTruth as gt
 import odometry.odometry as o
-"""
-This comment is for a test again"""
+
 class Log:
     start_time = 0
     t = np.array(0)
