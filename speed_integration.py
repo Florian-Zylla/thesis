@@ -12,7 +12,8 @@ import compass.compass as c
 import display.display as d
 import groundTruth.groundTruth as gt
 import odometry.odometry as o
-
+"""
+This comment is for a test"""
 class Log:
     start_time = 0
     t = np.array(0)
@@ -78,7 +79,7 @@ for i in range(120):
     speed = env_info['Learner'].vector_observations
     #odo.update_pose(speed,compass)
     print(odo.get_pose())
-    
+
     t = np.append(t,i)
     x = np.append(x,speed[0,0])
     y = np.append(y,speed[0,1])
