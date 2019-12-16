@@ -12,25 +12,7 @@ import compass.compass as c
 import display.display as d
 import groundTruth.groundTruth as gt
 import odometry.odometry as o
-
-class Log:
-    start_time = 0
-    t = np.array(0)
-    v = np.array([0,0,0])
-    pose_gt = np.array([0,0])
-    pose_odo = np.array([0,0])
-    orient = np.array([0])
-
-    def __init__(self):
-        self.start_time = time.strftime("%d.%m.%Y %H:%M:%S")
-
-    def update(self,step,odometry,compass,groundTruth):
-        self.step = np.append(self.t,np.array(step))
-        self.v = np.append(self.v,[speed[0,:]],axis=0)
-        self.pose_gt = np.append(self.pose_gt,[gt.get()])
-        self.pose_odo = np.append(self.pose_odo,[odometry.get_pose()])
-        self.orient = np.append(self.orient,np.array(compass.get()))
-
+import log.log as l
 
 
 
@@ -42,32 +24,33 @@ env = UnityEnvironment(
     seed=0,
     docker_training=False,
     inference=True
+
     # resolution=512,
     #play=True
 )
 
 # configuration of objects inside the environment
 print("Start")
-arena_config_in = ArenaConfig('../thesis/test_configs/acceleration_speed_test.yaml')
+config = '../thesis/test_configs/acceleration_speed_test.yaml'
+arena_config_in = ArenaConfig(config)
 env_info = env.reset(arenas_configurations=arena_config_in)
 
 display = d.Display()
 compass = c.Compass()
+compass.set(0)
 gt = gt.GroundTruth()
 odo = o.Odometry()
-log = Log()
-x = np.array(0)
-y = np.array(0)
-z = np.array(0)
+log = l.Log(config)
 
 
-l_turn = 0
-l_forward = 0
+l_turn = 1
+l_forward = 1
+
 t = np.array(0)
-
+start = time.time()
 # the agent will take 20 time steps as an example
 for i in range(120):
-
+    print(time.time()-start)
     if not i == 0:
         if i == 1:
             gt.findArena()
@@ -76,20 +59,18 @@ for i in range(120):
         gt.update()
     # velocity
     speed = env_info['Learner'].vector_observations
-    #odo.update_pose(speed,compass)
-    print(odo.get_pose())
+    odo.update_pose(speed,compass)
+    #print(odo.get_pose())
 
-    t = np.append(t,i)
-    x = np.append(x,speed[0,0])
-    y = np.append(y,speed[0,1])
-    z = np.append(z,speed[0,2])
+
     # camera input
     observation = env_info['Learner'].visual_observations[0]
     display.update(observation, compass, gt)
-    #log.update(i,odo,compass,gt)
+    log.update(i, speed, compass, odo, gt)
 
 
     hsv_img = matplotlib.colors.rgb_to_hsv((observation[0, :, :, :]).astype(np.float))
+    """
     if i == 0:
         l_turn = 0
         l_forward = 1
@@ -121,8 +102,13 @@ for i in range(120):
 
     if i == 95:
         l_forward = 0
-
-
+    """
+    """
+    if i%2:
+        l_forward = 0
+    else:
+        l_forward = 1
+"""
     env_info = env.step([l_forward, l_turn])
     if l_turn == 2:
         compass.step_left()
@@ -130,11 +116,22 @@ for i in range(120):
         compass.step_right()
 
 
+    start = time.time()
+log.save()
+"""
 plt.plot(t,z/50)
 plt.plot(t,y)
 plt.plot(t,x)
 plt.show()
-time.sleep(130)
+"""
+a = log.data
+a[1,:] = a[2,:]
+a[0,:]  = a[1,:]
+plt.plot(a[:,5],a[:,6])
+plt.plot(a[:,7],a[:,8])
+plt.axis('equal')
+plt.show()
+
 
 pygame.quit()
 
