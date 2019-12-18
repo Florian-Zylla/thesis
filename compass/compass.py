@@ -1,8 +1,8 @@
 class Compass:
     # simple compass class with 6 degrees accuracy
 
-    # like a normal compass zero degrees is north=0 and turning right
-    # starts to increase the value 6 degrees per step (E=90, S=180, W=270)
+    # like a normal compass zero degrees is north=0 and  but turning left
+    # starts to increase the value 6 degrees per step (E=270, S=180, W=90)
     orientation = 0
 
     def __init__(self):
@@ -17,11 +17,11 @@ class Compass:
         return self.orientation
 
     def step_right(self):
-        self.orientation += 6
-        if self.orientation > 359:
-            self.orientation = self.orientation % 360
-
-    def step_left(self):
         self.orientation -= 6
         if self.orientation < 0:
             self.orientation = 360 + self.orientation
+
+    def step_left(self):
+        self.orientation += 6
+        if self.orientation > 359:
+            self.orientation = self.orientation % 360
