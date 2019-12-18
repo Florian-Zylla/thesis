@@ -6,7 +6,5 @@ arenas:
     - !Item
       name: Agent
       positions:
-        - !Vector3 {x: 10,y: 0,z: 20 }
+        - !Vector3 {x: 20,y: 0,z: 20 }
       rotations: [0]
-
-

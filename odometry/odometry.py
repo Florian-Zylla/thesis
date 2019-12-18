@@ -1,7 +1,7 @@
 import math
 class Odometry:
     pose = (0, 0)
-    step = 0.07         #0.0595
+    step = 0.0595
     step_small = step/6
     old = 0
     def __init__(self):
@@ -14,14 +14,16 @@ class Odometry:
         return self.pose
 
     def update_pose(self, speed, compass):
-        theta = compass.get()
-        x = self.pose[0]
-        y = self.pose[1]
-        y += speed[0, 2] * math.cos(math.radians(theta)) * self.step
-        #y += speed[0, 0] * math.sin(math.radians(theta)) * self.step
-        x += speed[0, 2] * math.sin(math.radians(theta)) * self.step
-        #x += speed[0, 0] * math.cos(math.radians(theta)) * self.step
-        self.pose = (x, y)
+        theta = 360 - compass.get()
+        rad = math.radians(theta)
+        z = self.pose[0]
+        x = self.pose[1]
+        z += speed[0, 2] * math.sin(math.radians(theta)) * self.step
+        z += speed[0, 0] * math.cos(math.radians(theta)) * self.step
+
+        x += speed[0, 2] * math.cos(math.radians(theta)) * self.step
+        x -= speed[0, 0] * math.sin(math.radians(theta)) * self.step
+        self.pose = (z, x)
 
     def update_pose2(self, speed, compass):
         theta = compass.get()
