@@ -14,7 +14,7 @@ class Odometry:
         return self.pose
 
     def update_pose(self, speed, compass):
-        theta = 360 - compass.get()
+        theta = compass.get()
         rad = math.radians(theta)
         z = self.pose[0]
         x = self.pose[1]
