@@ -20,11 +20,11 @@ class Log:
         config = config.strip("../thesis/test_configs/")
 
         self.config = config
-    def update(self,step,speed,compass, odometry, groundtruth):
+    def update(self,step,speed,heading, odometry, groundtruth):
         (vx, vy, vz) = speed[0][:]
         (odox, odoy) = odometry.get_pose()
         (gtx, gty) = groundtruth.get()
-        current = np.array([[step, vx, vy, vz, compass.get(), odox, odoy, gtx, gty]])
+        current = np.array([[step, vx, vy, vz, heading.get(), odox, odoy, gtx, gty]])
         self.data = np.append(self.data,current, axis=0)
 
     def save(self):

@@ -40,7 +40,7 @@ class Display:
         pygame.display.update()
 
 
-    def update(self,observation, compass,gt):
+    def update(self,observation, heading, gt):
 
         # Scaling RGB camera from 0-1 to 0-255, upsize  and rotate image
         raw_img = (observation[0, :, :, :] * 255).astype(np.uint8)
@@ -49,7 +49,7 @@ class Display:
         surf = pygame.transform.scale(surf, (420, 420))
 
         #render text
-        text_loc_rot = self.font.render(str(compass.get()) + "°", True, (0, 0, 0))
+        text_loc_rot = self.font.render(str(heading.get()) + "°", True, (0, 0, 0))
         text_pos_gt = self.font.render("x: " + str(round(gt.get()[0],2))+ " y: " + str(round(gt.get()[1],2)), True, (0, 0, 0))  # render text
 
         #write image and text
@@ -59,4 +59,9 @@ class Display:
         #update window
         pygame.display.update()
 
-
+    def show(self,frame):
+        frame = np.flipud(np.rot90(frame))
+        surf = pygame.surfarray.make_surface(frame)
+        surf = pygame.transform.scale(surf, (420, 420))
+        self.display.blit(surf, (0, 0))
+        pygame.display.update()

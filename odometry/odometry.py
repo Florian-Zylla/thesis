@@ -13,12 +13,12 @@ class Odometry:
     def get_pose(self):
         return self.pose
 
-    def update_pose(self, speed, compass):
-        theta = compass.get()
-        rad = math.radians(theta)
+    def update_pose(self, speed, heading):
+        theta = heading.get()
+
         z = self.pose[0]
         x = self.pose[1]
-        z += speed[0, 2] * math.sin(math.radians(theta)) * self.step
+        z -= speed[0, 2] * math.sin(math.radians(theta)) * self.step
         z += speed[0, 0] * math.cos(math.radians(theta)) * self.step
 
         x += speed[0, 2] * math.cos(math.radians(theta)) * self.step
